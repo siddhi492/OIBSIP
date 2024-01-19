@@ -1,0 +1,183 @@
+package Task1;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class OnlineReservationSystem {
+	
+	private Map<String,String> customer;
+	private Map<String,String> reservations;
+	
+	public OnlineReservationSystem() {
+		customer=new HashMap<String, String>();
+		reservations=new HashMap<String, String>();
+		
+	}
+	public void execute() {
+		Scanner scanner=new Scanner(System.in);
+		while(true) {
+			System.out.println("***ONLINE RESERVATION SYSTEM***");
+			System.out.println("Select an option");
+			System.out.println("1.Register");
+			System.out.println("2.Login");
+			System.out.println("3.Exit");
+			
+			int option=scanner.nextInt();
+			scanner.nextLine();
+		
+			
+			switch(option)
+			{
+			case 1:
+				register(scanner);
+				break;
+			case 2:
+				login(scanner);
+				break;
+			case 3:
+				System.out.println("Thank You!Visit Again!");
+				return;
+			default:
+				System.out.println("Invalid!Please Try Again!");
+				break;
+					
+			}
+			System.out.println();
+			
+		}
+		
+	}
+	private void register(Scanner scanner)
+	{
+		System.out.println("***REGISTRATION***");
+		System.out.println("Enter username:");
+		String username=scanner.nextLine();
+		if(username.isEmpty())
+		{
+			System.out.println("Username cannot be empty");
+			return;
+		}
+		if(customer.containsKey(username))
+		{
+			System.out.println("Username already exists!");
+			return;
+		}
+		System.out.println("Enter password:");
+		String password=scanner.nextLine();
+		if(password.isEmpty()) {
+			System.out.println("Password cannot be empty!");
+		}
+		customer.put(username, password);
+		System.out.println("Registration Successful!");
+	}
+	private void login(Scanner scanner) {
+		System.out.println("***LOGIN***");
+		System.out.println("Enter username");
+		String username=scanner.nextLine();
+		System.out.println("Enter Password");
+		String password=scanner.nextLine();
+		
+		if(customer.containsKey(username)&&customer.get(username).equals(password)) {
+			System.out.println("Login Successful!");
+			reservation(scanner,username);
+			
+		}
+		else {
+			System.out.println("Invalid username or password!");
+		}
+	}
+	
+	private static boolean[] seats=new boolean[10];
+	private void reservation(Scanner scanner,String username) {
+		while(true)
+		{
+			System.out.println("***RESERVATION***");
+			System.out.println("Select your choice:");
+			System.out.println("1.Make a reservation");
+			System.out.println("2.Cancel a reservation");
+			System.out.println("3.View reservations");
+			System.out.println("4.Logout");
+			System.out.println("Enter your choice:");
+			int choice=scanner.nextInt();
+			
+			switch(choice) {
+			case 1:
+				makereservation(scanner,username);
+				break;
+			case 2:
+				cancelreservation(scanner,username);
+				break;
+			case 3:
+				viewreservation();
+				break;
+			case 4:
+				System.out.println("Logging out");
+				return;
+			default:
+				System.out.println("Invalid Choice!Try Again!");
+				break;
+			}
+			System.out.println();
+			
+		}
+	}
+	private void makereservation(Scanner scanner,String username)
+	{
+		System.out.println("Enter seat number(1-10):");
+		int seatNumber=scanner.nextInt();
+		if(seatNumber<1||seatNumber>10) {
+			System.out.println("Invalid Seat Number!");
+		}
+		else if(seats[seatNumber-1]) {
+			System.out.println("Seat already reserved!");
+		}
+		else {
+			seats[seatNumber-1]=true;
+			System.out.println("Seat reserved!");
+		}
+		
+		if(reservations.containsKey(username))
+		{
+			System.out.println("You already have a reservation!");
+		}
+		
+		
+	}
+	private void cancelreservation(Scanner scanner,String username) {
+		System.out.println("Enter seat number(1-10):");
+		int seatNumber=scanner.nextInt();
+		if(seatNumber<1||seatNumber>10) {
+			System.out.println("Invalid Seat Number!");
+		}
+		else if(!seats[seatNumber-1]) {
+			System.out.println("Seat not reserved!");
+		}
+		else {
+			seats[seatNumber-1]=false;
+			System.out.println("Reservation cancelled!");
+		}
+	}
+	private void viewreservation() {
+		System.out.println("***Seats***");
+		for(int i=0;i<seats.length;i++)
+		{
+			if(seats[i])
+			{
+				System.out.println((i+1)+"Reserved!");
+			}
+			else {
+				System.out.println((i+1)+" ");
+			}
+		}
+		System.out.println();
+	}
+	public static void main(String args[])
+	{
+		OnlineReservationSystem ors=new OnlineReservationSystem();
+		ors.execute();
+	}
+	
+	
+
+}
